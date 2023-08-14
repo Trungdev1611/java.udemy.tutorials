@@ -6,6 +6,9 @@ import com.example.udemyspring.exception.ResourceNotFoundException;
 import com.example.udemyspring.repository.PostRepository;
 import com.example.udemyspring.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +35,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPost() {
-        return postRepository.findAll().stream().map(item -> mapFromPostToPostDTO(item)).collect(Collectors.toList()); // Thu thập thành List<PostDTO>
+    public List<PostDTO> getAllPost(int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Page<Post> postPage = postRepository.findAll(pageable);
+        //get Content from Page<Post>
+        List<Post> ListOfPost = postPage.getContent();
+        return ListOfPost.stream().map(item -> mapFromPostToPostDTO(item)).collect(Collectors.toList()); // Thu thập thành List<PostDTO>
     }
 
     @Override

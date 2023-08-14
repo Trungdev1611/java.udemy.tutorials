@@ -4,6 +4,7 @@ import com.example.udemyspring.DTO_payload.PostDTO;
 import com.example.udemyspring.service.PostService;
 import com.example.udemyspring.service.impl.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,14 @@ public class PostController {
 
     //getAllPost
     @GetMapping("/")
-    public ResponseEntity<List<PostDTO>> getAllPost() {
-        return new ResponseEntity<>(postService.getAllPost(), HttpStatus.OK);
+    //http://localhost:8080/api/posts/?pageIndex=0&pageSize=2
+    public ResponseEntity<List<PostDTO>> getAllPost(
+            //default require true, nếu không chỉ định value thì mặc định là page
+            @RequestParam(value="pageIndex", defaultValue = "0", required = false) int pageIndex,
+            @RequestParam(value="pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+
+        return new ResponseEntity<>(postService.getAllPost(pageIndex, pageSize), HttpStatus.OK);
     }
 
     //get Post by Id
