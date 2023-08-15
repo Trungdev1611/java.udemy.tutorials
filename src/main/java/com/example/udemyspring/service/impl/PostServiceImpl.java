@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,9 +37,33 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getAllPost(int pageIndex, int pageSize) {
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+    public PostResponse getAllPost(int pageIndex, int pageSize, String sortByField, String sortDirection) {
+
+        // lấy lớp pageable với 2 tham số là pageIndex và pageSize thì ta có thể làm thế
+        // này (nếu chỉ cần phân trang)
+        // Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        // Page<Post> postPage = postRepository.findAll(pageable);
+
+        // C1
+        // nếu như có sort ta có thể thêm vào tham số thứ 3 như sau (cả phân trang và
+        // sort)
+        Sort sort;
+        if (sortDirection.equalsIgnoreCase("dsc")) {
+            sort = Sort.by(sortByField).descending();
+        } else {
+            sort = Sort.by(sortByField).ascending();
+        }
+
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
         Page<Post> postPage = postRepository.findAll(pageable);
+
+        // // C2 --xem lại có vẻ không đúng lắm
+        // // cũng với trường hợp 3 tham số ta cũng có thể sử dụng như sau với việc khai
+        // // báo lớp Sort riêng
+        // Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        // Sort sort = Sort.by(sortByField).ascending(); // mặc định là ascending
+        // Page<Post> postPage = postRepository.findAll(pageable, sort);
+
         // get Content from Page<Post>
         List<Post> ListOfPost = postPage.getContent();
         List<PostDTO> listPostDRO = ListOfPost.stream().map(item -> mapFromPostToPostDTO(item))
@@ -49,7 +74,9 @@ public class PostServiceImpl implements PostService {
         PostResponse postResponse = new PostResponse();
 
         postResponse.setListPostDTO(listPostDRO);
-        postResponse.setPageIndex(postPage.getNumber()); // phương thức getNumber đã có sẵn trong lớp Page để láy page
+        postResponse.setPageIndex(postPage.getNumber()); // phương thức getNumber
+                                                         // đã có sẵn trong lớp
+                                                         // Page để láy page
                                                          // index hiện tại
         postResponse.setPageSize(postPage.getSize()); // phương thức getSize đã có sẵn trong lớp Page để láy số phần tử
                                                       // trên 1 trang
