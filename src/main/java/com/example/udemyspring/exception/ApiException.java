@@ -6,12 +6,15 @@ public class ApiException extends RuntimeException {
     private HttpStatus status;
     private String message;
 
+    private int httpStatus;
+
     public ApiException() {
     }
 
-    public ApiException(HttpStatus status, String message) {
+    public ApiException(HttpStatus status, String message, int httpStatus) {
         this.status = status;
         this.message = message;
+        this.httpStatus = httpStatus;
     }
 
     public ApiException(String message, HttpStatus status, String message1) {
@@ -26,6 +29,10 @@ public class ApiException extends RuntimeException {
 
     public String getMessage() {
         return this.message;
+    }
+
+    public int getHttpStatus() {
+        return this.httpStatus;
     }
 
 }

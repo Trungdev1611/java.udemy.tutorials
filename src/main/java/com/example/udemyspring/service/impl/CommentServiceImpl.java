@@ -78,16 +78,37 @@ public class CommentServiceImpl implements CommentSerrvice {
         // từ comment lấy ra postId so sánh với postId trong post
         // Lưu ý nếu như ta chỉ muốn dùng như thế này !comment.getPost().equals(post)
         // thì ta phải có một hàm hashcode bên trong lớp post
-        try {
             if (!comment.getPost().getId().equals(post.getId())) {
-                ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "comment không thuộc post");
+                //bắt lỗi trên GlobalException
+                throw new ApiException(HttpStatus.BAD_REQUEST, "comment không thuộc post", 400);
 
             }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+
 
         return convertCommentToCommentDTO(comment);
+    }
+
+    @Override
+    public CommentDTO updateCommentByPostIdAndCommentId(Long postId, Long commentId, CommentDTO commentDTO) {
+        // tìm Post dựa trên idPost nếu khong thấy trả ra exception
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        Comment comment = commentRespository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+
+        if (!comment.getPost().getId().equals(post.getId())) {
+            //bắt lỗi trên GlobalException
+            throw new ApiException(HttpStatus.BAD_REQUEST, "comment không thuộc post", 400);
+
+        }
+        System.out.println("commentDTO"+ commentDTO);
+        comment.setName(commentDTO.getName());
+        comment.setBody(commentDTO.getBody());
+        comment.setEmail(commentDTO.getEmail());
+
+        Comment updateComment =   commentRespository.save(comment);
+        return convertCommentToCommentDTO(updateComment);
     }
 
     private Comment convertCommentDTOToComment(CommentDTO commentDTO) {

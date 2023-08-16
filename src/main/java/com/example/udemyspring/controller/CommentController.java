@@ -5,12 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.udemyspring.DTO_payload.CommentDTO;
 import com.example.udemyspring.service.CommentSerrvice;
@@ -19,7 +14,6 @@ import com.example.udemyspring.service.CommentSerrvice;
 @RequestMapping("/api/posts")
 public class CommentController {
     final private CommentSerrvice commentSerrvice;
-
     @Autowired
     public CommentController(CommentSerrvice commentSerrvice) {
         this.commentSerrvice = commentSerrvice;
@@ -50,6 +44,13 @@ public class CommentController {
     public ResponseEntity<CommentDTO> getComentByCommentIdAndPostId(@PathVariable Long postId,
             @PathVariable Long commentId) {
         return new ResponseEntity<>(commentSerrvice.getCommentByCommentIdAndPostId(postId, commentId), HttpStatus.OK);
+    }
+
+    @PutMapping("{postId}/comments/{commentId}")
+    public ResponseEntity<CommentDTO> updateCommentByPostIdAndCommentId(@PathVariable Long postId,
+                                                                        @PathVariable Long commentId,
+                                                                        @RequestBody CommentDTO commentDTO) {
+        return new ResponseEntity<>(commentSerrvice.updateCommentByPostIdAndCommentId(postId, commentId, commentDTO), HttpStatus.OK);
     }
 
 }

@@ -6,9 +6,12 @@ public class ErrorDTO {
     private String message;
     private HttpStatus status;
 
-    public ErrorDTO(String message, HttpStatus status) {
+    private int httpstatus;
+
+    public ErrorDTO(String message, HttpStatus status, int httpstatus) {
         this.message = message;
         this.status = status;
+        this.httpstatus = httpstatus;
     }
 
     public String getMessage() {
@@ -17,5 +20,8 @@ public class ErrorDTO {
 
     public HttpStatus getStatus() {
         return status;
+    }
+    public int getHttpstatus() {
+        return httpstatus;
     }
 }
