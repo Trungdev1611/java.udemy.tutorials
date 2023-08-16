@@ -1,10 +1,17 @@
 package com.example.udemyspring.service.impl;
 
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.udemyspring.DTO_payload.CommentDTO;
 import com.example.udemyspring.entity.Comment;
 import com.example.udemyspring.entity.Post;
+import com.example.udemyspring.exception.ApiException;
 import com.example.udemyspring.exception.ResourceNotFoundException;
 import com.example.udemyspring.repository.CommentRespository;
 import com.example.udemyspring.repository.PostRepository;
@@ -31,13 +38,56 @@ public class CommentServiceImpl implements CommentSerrvice {
         comment.setPost(post);
 
         // save vào database
-        commentRespository.save(comment);
+        Comment commentSave = commentRespository.save(comment);
 
         // chuyển comment thành commentDTO và gửi lại client
-        CommentDTO newCommentDTO = convertCommentToCommentDTO(comment);
+        CommentDTO newCommentDTO = convertCommentToCommentDTO(commentSave);
 
         // trả CommentDTO về client
         return newCommentDTO;
+    }
+
+    // get List comments theo postId
+    @Override
+    public List<CommentDTO> getCommentsByPostId(Long postId) {
+        List<Comment> comments = commentRespository.findByPostId(postId);
+
+        // convert comments List to commentDTO List
+        return comments.stream().map(item -> convertCommentToCommentDTO(item))
+                .collect(Collectors.toList());
+    }
+
+    // get comment chỉ cẩn commentId
+    @Override
+    public CommentDTO getCommentByCommentId(Long commentId) {
+        Comment comment = commentRespository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+        return convertCommentToCommentDTO(comment);
+    }
+
+    // get comment cần cả commentId và PostId
+    @Override
+    public CommentDTO getCommentByCommentIdAndPostId(Long postId, Long commentId) {
+        // tìm Post dựa trên idPost nếu khong thấy trả ra exception
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        Comment comment = commentRespository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+
+        // từ comment lấy ra postId so sánh với postId trong post
+        // Lưu ý nếu như ta chỉ muốn dùng như thế này !comment.getPost().equals(post)
+        // thì ta phải có một hàm hashcode bên trong lớp post
+        try {
+            if (!comment.getPost().getId().equals(post.getId())) {
+                ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "comment không thuộc post");
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return convertCommentToCommentDTO(comment);
     }
 
     private Comment convertCommentDTOToComment(CommentDTO commentDTO) {

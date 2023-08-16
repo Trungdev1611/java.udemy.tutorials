@@ -1,6 +1,11 @@
 package com.example.udemyspring.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +27,29 @@ public class CommentController {
 
     @PostMapping("/{postId}/comments")
     // http://localhost:8080/api/posts/idPost/comments
-    public CommentDTO createComment(@PathVariable Long postId, @RequestBody CommentDTO comment) {
-        return commentSerrvice.createComment(postId, comment);
+    public ResponseEntity<CommentDTO> createComment(@PathVariable Long postId, @RequestBody CommentDTO comment) {
+        return new ResponseEntity<>(commentSerrvice.createComment(postId, comment), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/comments")
+    // http://localhost:8080/api/posts/idPost/comments (get list comment theo id
+    // Post)
+    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable Long postId) {
+        return new ResponseEntity<>(commentSerrvice.getCommentsByPostId(postId), HttpStatus.OK);
+    }
+
+    @GetMapping("/comments/{commentId}")
+    // http://localhost:8080/api/posts/comments/1 (get comment theo commentId)
+    public ResponseEntity<CommentDTO> getCommentByCommentId(@PathVariable Long commentId) {
+        return new ResponseEntity<>(commentSerrvice.getCommentByCommentId(commentId), HttpStatus.OK);
+    }
+
+    @GetMapping("{postId}/comments/{commentId}")
+    // http://localhost:8080/api/posts/1/comments/1 (get comment theo commentId và
+    // postId)
+    public ResponseEntity<CommentDTO> getComentByCommentIdAndPostId(@PathVariable Long postId,
+            @PathVariable Long commentId) {
+        return new ResponseEntity<>(commentSerrvice.getCommentByCommentIdAndPostId(postId, commentId), HttpStatus.OK);
     }
 
 }
