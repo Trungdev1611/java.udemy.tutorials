@@ -16,7 +16,10 @@ public interface CommentSerrvice {
     // get comment by idPost và idComment
     CommentDTO getCommentByCommentIdAndPostId(Long postId, Long commentId);
 
-    //update comment by PostId and commentId
+    // update comment by PostId and commentId
     CommentDTO updateCommentByPostIdAndCommentId(Long postId, Long commentId, CommentDTO commentDTO);
+
+    // delete comment by postId and commentId
+    void deleteCommentByPostIdAndCommentId(Long postId, Long commentId);
 
 }

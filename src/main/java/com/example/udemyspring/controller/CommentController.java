@@ -14,6 +14,7 @@ import com.example.udemyspring.service.CommentSerrvice;
 @RequestMapping("/api/posts")
 public class CommentController {
     final private CommentSerrvice commentSerrvice;
+
     @Autowired
     public CommentController(CommentSerrvice commentSerrvice) {
         this.commentSerrvice = commentSerrvice;
@@ -47,10 +48,22 @@ public class CommentController {
     }
 
     @PutMapping("{postId}/comments/{commentId}")
+    // http://localhost:8080/api/posts/1/comments/1 (update comment theo comment id
+    // và post id)
     public ResponseEntity<CommentDTO> updateCommentByPostIdAndCommentId(@PathVariable Long postId,
-                                                                        @PathVariable Long commentId,
-                                                                        @RequestBody CommentDTO commentDTO) {
-        return new ResponseEntity<>(commentSerrvice.updateCommentByPostIdAndCommentId(postId, commentId, commentDTO), HttpStatus.OK);
+            @PathVariable Long commentId,
+            @RequestBody CommentDTO commentDTO) {
+        return new ResponseEntity<>(commentSerrvice.updateCommentByPostIdAndCommentId(postId, commentId, commentDTO),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("{postId}/comments/{commentId}")
+    // http://localhost:8080/api/posts/1/comments/2 (xóa comment thuộc post dựa trên
+    // commentId và postId)
+    public ResponseEntity<String> deleteCommentByPostIdAndCommentId(@PathVariable Long postId,
+            @PathVariable Long commentId) {
+        commentSerrvice.deleteCommentByPostIdAndCommentId(postId, commentId);
+        return new ResponseEntity<String>("Delete comment success", HttpStatus.OK);
     }
 
 }
