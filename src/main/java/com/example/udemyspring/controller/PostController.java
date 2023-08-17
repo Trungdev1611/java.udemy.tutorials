@@ -4,6 +4,8 @@ import com.example.udemyspring.DTO_payload.PostDTO;
 import com.example.udemyspring.DTO_payload.PostResponse;
 import com.example.udemyspring.service.PostService;
 import com.example.udemyspring.service.impl.PostServiceImpl;
+import com.example.udemyspring.utils.AppConstant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -36,15 +38,21 @@ public class PostController {
     // getAllPost
     @GetMapping("")
     // http://localhost:8080/api/posts?pageIndex=0&pageSize=2
+    // http://localhost:8080/api/posts?pageIndex=0&pageSize=1000&sortByField=title
+    // http://localhost:8080/api/posts?pageIndex=0&pageSize=1000&sortByField=content&sortDirection=dsc
     public ResponseEntity<PostResponse> getAllPost(
             // default require true, nếu không chỉ định value thì mặc định là page
-            @RequestParam(value = "pageIndex", defaultValue = "0", required = false) int pageIndex,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+            @RequestParam(value = "pageIndex", defaultValue = AppConstant.PAGE_INDEX_DEFAULT, required = false) int pageIndex,
+            @RequestParam(value = "pageSize", defaultValue = AppConstant.PAGE_SIZE_DEFAULT, required = false) int pageSize,
+            @RequestParam(value = "sortByField", defaultValue = AppConstant.SORT_BY_FIELD_DEFAULT, required = false) String sortByField,
+            @RequestParam(value = "sortDirection", defaultValue = AppConstant.SORT_DIRECTION_DEFAULT, required = false) String sortDirection) {
 
-        return new ResponseEntity<>(postService.getAllPost(pageIndex, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getAllPost(pageIndex, pageSize, sortByField, sortDirection),
+                HttpStatus.OK);
     }
 
     // get Post by Id
+
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id) {
         return new ResponseEntity<>(postService.getPostById(id), HttpStatus.OK);

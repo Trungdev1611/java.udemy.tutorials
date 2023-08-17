@@ -10,7 +10,7 @@ import java.util.List;
 public interface PostService {
     PostDTO createPost(PostDTO postDTO);
 
-    PostResponse getAllPost(int pageIndex, int pageSize);
+    PostResponse getAllPost(int pageIndex, int pageSize, String sortByField, String sortDirection);
 
     PostDTO getPostById(Long id);
 
