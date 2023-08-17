@@ -5,7 +5,11 @@ import java.util.Set;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+//Do @Data bao gồm toString method nên có thể dẫn đến loop vô tận với modelMapper
+//ta sẽ sử dụng @Getter @Setter trong trường hợp này
+// @Data
+@Getter
+@Setter
 /*
  * Annotation @Data tương đương với 1 nhóm annotation sau
  *
