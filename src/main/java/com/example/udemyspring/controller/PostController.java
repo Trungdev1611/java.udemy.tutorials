@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
     final private PostService postService;
-
     @Autowired
     public PostController(PostService postService) { // đúng ra chỗ này phải là PostServiceImpl postService nhưng trong
         // trường hợp này chỉ có 1 triển khai duy nhất nên ta để PostService vẫn ok, nếu
