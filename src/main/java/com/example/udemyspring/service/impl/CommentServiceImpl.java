@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,13 @@ public class CommentServiceImpl implements CommentSerrvice {
     PostRepository postRepository;
     CommentRespository commentRespository;
 
-    public CommentServiceImpl(PostRepository postRepository, CommentRespository commentRespository) {
+    ModelMapper modelMapper;
+
+    public CommentServiceImpl(PostRepository postRepository, CommentRespository commentRespository,
+            ModelMapper modelMapper) {
         this.postRepository = postRepository;
         this.commentRespository = commentRespository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -129,21 +134,26 @@ public class CommentServiceImpl implements CommentSerrvice {
     }
 
     private Comment convertCommentDTOToComment(CommentDTO commentDTO) {
-        Comment comment = new Comment();
-        comment.setId(commentDTO.getId());
-        comment.setName(commentDTO.getName());
-        comment.setEmail(commentDTO.getEmail());
-        comment.setBody(commentDTO.getBody());
+        Comment comment = modelMapper.map(commentDTO, Comment.class);
+
+        // convert thủ công
+        // Comment comment = new Comment();
+        // comment.setId(commentDTO.getId());
+        // comment.setName(commentDTO.getName());
+        // comment.setEmail(commentDTO.getEmail());
+        // comment.setBody(commentDTO.getBody());
         return comment;
 
     }
 
     private CommentDTO convertCommentToCommentDTO(Comment comment) {
-        CommentDTO newCommentDTO = new CommentDTO();
-        newCommentDTO.setId(comment.getId());
-        newCommentDTO.setName(comment.getName());
-        newCommentDTO.setEmail(comment.getEmail());
-        newCommentDTO.setBody(comment.getBody());
+        CommentDTO newCommentDTO = modelMapper.map(comment, CommentDTO.class);
+        // convert thủ công
+        // CommentDTO newCommentDTO = new CommentDTO();
+        // newCommentDTO.setId(comment.getId());
+        // newCommentDTO.setName(comment.getName());
+        // newCommentDTO.setEmail(comment.getEmail());
+        // newCommentDTO.setBody(comment.getBody());
 
         return newCommentDTO;
     }

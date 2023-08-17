@@ -6,6 +6,8 @@ import com.example.udemyspring.entity.Post;
 import com.example.udemyspring.exception.ResourceNotFoundException;
 import com.example.udemyspring.repository.PostRepository;
 import com.example.udemyspring.service.PostService;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
 
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -112,20 +116,28 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDTO mapFromPostToPostDTO(Post post) {
-        PostDTO postDTOCreated = new PostDTO();
-        postDTOCreated.setId(post.getId());
-        postDTOCreated.setTitle(post.getTitle());
-        postDTOCreated.setDescription(post.getDescription());
-        postDTOCreated.setContent(post.getContent());
+        // đây là sử dụng thư viện mapper với 2 tham số là source và destination
+        PostDTO postDTOCreated = modelMapper.map(post, PostDTO.class);
+
+        // comment dưới đây là chưa sử dụng thư viện mapper
+        // PostDTO postDTOCreated = new PostDTO();
+        // postDTOCreated.setId(post.getId());
+        // postDTOCreated.setTitle(post.getTitle());
+        // postDTOCreated.setDescription(post.getDescription());
+        // postDTOCreated.setContent(post.getContent());
         return postDTOCreated;
     }
 
     private Post mapFromPostDTOToPost(PostDTO postDTO) {
-        Post postCreated = new Post();
-        postCreated.setId((postDTO.getId()));
-        postCreated.setTitle((postDTO.getTitle()));
-        postCreated.setDescription((postDTO.getDescription()));
-        postCreated.setContent((postDTO.getContent()));
+        // đây là sử dụng thư viện mapper với 2 tham số là source và destination
+        Post postCreated = modelMapper.map(postDTO, Post.class);
+
+        // comment dưới đây là chưa sử dụng thư viện mapper
+        // Post postCreated = new Post();
+        // postCreated.setId((postDTO.getId()));
+        // postCreated.setTitle((postDTO.getTitle()));
+        // postCreated.setDescription((postDTO.getDescription()));
+        // postCreated.setContent((postDTO.getContent()));
         return postCreated;
     }
 
