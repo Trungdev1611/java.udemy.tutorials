@@ -4,6 +4,8 @@
 //hợp dữ liệu gửi về client quá nhiều
 package com.example.udemyspring.DTO_payload;
 
+import java.util.Set;
+
 import lombok.Data;
 
 @Data
@@ -12,5 +14,9 @@ public class PostDTO {
     private String title;
     private String description;
     private String content;
+
+    // danh sách comment trong pôst
+    Set<CommentDTO> comments; // trường này phải trùng với @OneToMany(mappedBy = "post") private Set<Comment>
+                              // comments; trong lớp post
 
 }
