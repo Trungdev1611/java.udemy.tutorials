@@ -6,12 +6,22 @@ package com.example.udemyspring.DTO_payload;
 
 import java.util.Set;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class PostDTO {
     private Long id;
+
+    // validate title not null, not empty, ít nhất 2 ký tự với annotation sau
+    @NotEmpty
+    @Size(min = 2, message = "title phải có ít nhất 2 ký tự")
     private String title;
+
+    // validate description not null, not empty, ít nhất 10 ký tự với annotation sau
+    @NotEmpty
+    @Size(min = 10, message = "title phải có ít nhất 10 ký tự")
     private String description;
     private String content;
 

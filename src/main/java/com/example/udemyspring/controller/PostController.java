@@ -6,6 +6,8 @@ import com.example.udemyspring.service.PostService;
 import com.example.udemyspring.service.impl.PostServiceImpl;
 import com.example.udemyspring.utils.AppConstant;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
     final private PostService postService;
+
     @Autowired
     public PostController(PostService postService) { // đúng ra chỗ này phải là PostServiceImpl postService nhưng trong
         // trường hợp này chỉ có 1 triển khai duy nhất nên ta để PostService vẫn ok, nếu
@@ -30,7 +33,7 @@ public class PostController {
 
     // create blog Post
     @PostMapping("/create_post")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
+    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
 
