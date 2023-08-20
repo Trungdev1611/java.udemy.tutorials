@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +29,10 @@ public class PostController {
         // thì ta phải chỉ rõ ràng ra PostController(PostServiceImpl1 postService) hoặc
         // PostController(PostServiceImpl2 postService)
         this.postService = postService;
-
     }
 
     // create blog Post
+    @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PostMapping("/create_post")
     public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
@@ -61,12 +62,14 @@ public class PostController {
     }
 
     // update Post
+    @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@PathVariable(name = "id") Long idUpdate, @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.updatePost(postDTO, idUpdate), HttpStatus.OK);
     }
 
     // delete post
+    @PreAuthorize("hasRole('AGENCY')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Long id) {
         postService.deletepost(id);
