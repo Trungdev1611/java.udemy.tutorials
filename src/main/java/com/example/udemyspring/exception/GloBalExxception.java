@@ -63,7 +63,7 @@ public class GloBalExxception extends ResponseEntityExceptionHandler { // nếu 
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Custom Access Denied Message");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Không có quyền delete post");
     }
 
     // Xử lý các exception khác tương tự ở đây...
