@@ -3,7 +3,9 @@ package com.example.udemyspring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +20,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration // annotation này định nghĩa lớp cấu hình, định nghĩa 1 nguồn của các @Bean
 @EnableMethodSecurity // cho phép áp dụng phân quyền hasRole ở bên controller
 public class SercurityConfiguration {
+    private UserDetailsService userDetailsService;
+
+    // lấy userDetailsService ra ở đây
+    public SercurityConfiguration(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -48,26 +62,29 @@ public class SercurityConfiguration {
     // ở đây ta hardcode user1 có username là trung, pass là trung và roles là USER
     // ở đây ta hardcode admin có username là admin, admin là trung và roles là
     // ADMIN
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user1 = User.builder()
-                .username("trung")
-                .password(passwordEncoder().encode("trung"))
-                .roles("USER")
-                .build();
 
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
+    // đến bây giờ khi mà load user từ database ta không cần cái define tĩnh này
+    // nữa, ta sẽ define dữ liệu như này vào database
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+    // UserDetails user1 = User.builder()
+    // .username("trung")
+    // .password(passwordEncoder().encode("trung"))
+    // .roles("USER")
+    // .build();
 
-        UserDetails agency = User.builder()
-                .username("agency")
-                .password(passwordEncoder().encode("agency"))
-                .roles("AGENCY")
-                .build();
+    // UserDetails admin = User.builder()
+    // .username("admin")
+    // .password(passwordEncoder().encode("admin"))
+    // .roles("ADMIN")
+    // .build();
 
-        return new InMemoryUserDetailsManager(user1, admin, agency);
-    }
+    // UserDetails agency = User.builder()
+    // .username("agency")
+    // .password(passwordEncoder().encode("agency"))
+    // .roles("AGENCY")
+    // .build();
+
+    // return new InMemoryUserDetailsManager(user1, admin, agency);
+    // }
 }
