@@ -45,13 +45,15 @@ public class SercurityConfiguration {
                 .authorizeHttpRequests((authorize) ->
                 // authorize.anyRequest().authenticated()) // mọi request đều phải authen
                 authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll() // bỏ qua việc đăng nhập với method get
-                                                                                 // và bắt đầu với api in url
+                        .requestMatchers("/api/auth/**").permitAll() // và bắt đầu với api in url và
+                                                                     // method post với auth để login
                         .anyRequest().authenticated())
 
-                .httpBasic(Customizer.withDefaults()); // show popup login thay vì form như lúc trước, nếu trong postman
-                                                       // thì ta gửi username và password qua header ở BasicAuth,
-                                                       // username và password sẽ được gửi lên dưới dạng base64 với
-                                                       // trường Authorization
+                .httpBasic(Customizer.withDefaults()); // show popup login thay vì form như
+        // lúc trước, nếu trong postman
+        // thì ta gửi username và password qua header ở BasicAuth,
+        // username và password sẽ được gửi lên dưới dạng base64 với
+        // trường Authorization
         // tham khảo
         // https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/basic.html
         return http.build(); // return defaultSercurityFilterChain
