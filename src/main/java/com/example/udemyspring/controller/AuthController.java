@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.udemyspring.DTO_payload.LoginDTO;
+import com.example.udemyspring.DTO_payload.RegisterDTO;
 import com.example.udemyspring.service.AuthService;
 
 @RestController
@@ -28,4 +29,10 @@ public class AuthController {
         return new ResponseEntity<String>(authService.login(loginDTO), HttpStatus.OK);
     }
 
+    // Build register restAPI
+    @PostMapping({ "/register", "/signup" }) // có thể chọn 1 trong 2 url
+    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
+        System.out.println("run register controller");
+        return new ResponseEntity<String>(authService.register(registerDTO), HttpStatus.CREATED);
+    }
 }
