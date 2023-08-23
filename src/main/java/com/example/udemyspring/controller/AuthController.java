@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.udemyspring.DTO_payload.JwtResponse;
 import com.example.udemyspring.DTO_payload.LoginDTO;
 import com.example.udemyspring.DTO_payload.RegisterDTO;
 import com.example.udemyspring.service.AuthService;
@@ -23,10 +24,23 @@ public class AuthController {
     }
 
     // Build login restAPI
+    // @PostMapping({ "/login", "/signin" }) // có thể chọn 1 trong 2 url
+    // public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+    // System.out.println(11111123);
+    // return new ResponseEntity<String>(authService.login(loginDTO),
+    // HttpStatus.OK);
+    // }
+
     @PostMapping({ "/login", "/signin" }) // có thể chọn 1 trong 2 url
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        System.out.println(11111123);
-        return new ResponseEntity<String>(authService.login(loginDTO), HttpStatus.OK);
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginDTO loginDTO) {
+
+        String token = authService.login(loginDTO);
+
+        JwtResponse jwtResponse = new JwtResponse();
+
+        jwtResponse.setAccessToken(token);
+
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
     // Build register restAPI

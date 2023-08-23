@@ -29,8 +29,8 @@ public class JWTTokenProvider {
     @Value("app.jwt-secret") // truy cập biến trong application.property
     private String jwtSecret;
 
-    @Value("app-jwt-expiration-milliseconds") // truy cập biến trong application.property
-    private long jwtExpirationDate;
+    @Value("${app-jwt-expiration-milliseconds}") // truy cập biến trong application.property
+    private Long jwtExpirationDate;
 
     // generate JWT token method
     public String generateToken(Authentication authentication) {

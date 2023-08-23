@@ -22,6 +22,7 @@ import com.example.udemyspring.entity.User;
 import com.example.udemyspring.exception.ApiException;
 import com.example.udemyspring.repository.RoleRepository;
 import com.example.udemyspring.repository.UserRepository;
+import com.example.udemyspring.security.JWTTokenProvider;
 import com.example.udemyspring.service.AuthService;
 import org.springframework.security.core.AuthenticationException;
 
@@ -32,16 +33,19 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager,
             UserRepository userRepository,
             RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            JWTTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -63,7 +67,12 @@ public class AuthServiceImpl implements AuthService {
         // String password = (String) authentication.getCredentials(); // Lấy mật khẩu
 
         // System.out.println("email::" + email + "pass:::" + password);
-        return "User login successfully";
+
+        // create token
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        return token;
+        // return "User login successfully";
     }
     // public String login(LoginDTO loginDto) {
     // try {

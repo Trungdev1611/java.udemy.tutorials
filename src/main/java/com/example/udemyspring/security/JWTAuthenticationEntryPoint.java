@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
+
+// authenticationEntryPoint là nơi bạn có thể tùy chỉnh hành vi khi xác thực
+// thất bại và người dùng truy cập vào một tài nguyên yêu cầu xác thực
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
