@@ -2,6 +2,7 @@ package com.example.udemyspring.security;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Base64.Decoder;
 
 import org.modelmapper.internal.asm.tree.UnsupportedClassVersionException;
@@ -14,6 +15,7 @@ import com.example.udemyspring.exception.ApiException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -41,11 +43,25 @@ public class JWTTokenProvider {
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
         String token = Jwts.builder()
-                .setSubject(username)
+                .setSubject(username) // set payload cho token là username, nếu muốn dùng bất kỳ dữ liệu nào khác
+                                      // ngoài string trong setSubjectname thì ta có thể sử dụng .setClaims thay thế
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(key())
                 .compact();
+
+        // ví dụ về 1 cách tạo token với payload tùy chỉnh
+        // String token = Jwts.builder()
+        // .setClaims(new HashMap<String, Object>() {{
+        // put("userId", userPrincipal.getUserId()); // Thêm thông tin tùy chỉnh vào
+        // claims
+        // put("role", userPrincipal.getRole()); // Ví dụ thêm vai trò của người dùng
+        // // Thêm các thông tin khác tùy ý
+        // }})
+        // .setIssuedAt(new Date())
+        // .setExpiration(expireDate)
+        // .signWith(key())
+        // .compact();
 
         return token;
     }
@@ -56,7 +72,7 @@ public class JWTTokenProvider {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    // get Username from token
+    // get Username from token //giống như giải mã token để lấy username
     public String getUsername(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key())
@@ -64,6 +80,17 @@ public class JWTTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
         String username = claims.getSubject();
+
+        // ví dụ về cách giải mã token tùy chỉnh phía trên
+        // Jws<Claims> claimsJws = Jwts.parserBuilder()
+        // .setSigningKey(key())
+        // .build()
+        // .parseClaimsJws(token);
+
+        // Claims claims = claimsJws.getBody();
+        // String userId = (String) claims.get("userId"); // Lấy thông tin "userId" từ
+        // claims
+        // String role = (String) claims.get("role"); // Lấy thông tin "role" từ claims
         return username;
     }
 
