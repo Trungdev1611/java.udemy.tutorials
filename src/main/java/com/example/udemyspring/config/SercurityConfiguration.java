@@ -28,10 +28,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableMethodSecurity // cho phép áp dụng phân quyền hasRole ở bên controller
 
 // @EnableWebSecurity //method này cho phép áp dụng phân quyền ở mức URL
-// VD:  http.authorizeRequests()
-// .antMatchers(HttpMethod.GET, "/public/**").permitAll() // Cho phép tất cả truy cập phương thức GET
-// .antMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN") // Yêu cầu vai trò ADMIN cho phương thức POST
-// .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER") // Yêu cầu vai trò USER cho phương thức POST
+// VD: http.authorizeRequests()
+// .antMatchers(HttpMethod.GET, "/public/**").permitAll() // Cho phép tất cả
+// truy cập phương thức GET
+// .antMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN") // Yêu cầu vai
+// trò ADMIN cho phương thức POST
+// .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER") // Yêu cầu vai trò
+// USER cho phương thức POST
 // .anyRequest().authenticated() // Các request còn lại yêu cầu xác thực
 // .and()
 // .formLogin()
@@ -73,6 +76,9 @@ public class SercurityConfiguration {
                 authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll() // bỏ qua việc đăng nhập với method get
                         .requestMatchers("/api/auth/**").permitAll() // và bắt đầu với api in url và
                                                                      // method post với auth để login
+                        .requestMatchers("/swagger-ui/**").permitAll() // cấu hình swagger public
+                        //http://localhost:8080/v3/api-docs  
+                        .requestMatchers("/v3/api-docs/**").permitAll()    
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
