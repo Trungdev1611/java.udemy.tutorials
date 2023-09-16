@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(LoginDTO loginDto) {
-        System.out.println("loginDTO1123!@#");
+        System.out.println("loginDTO1123!@#"+ loginDto.getUsernameOrEmail()+ loginDto.getPassword());
         // /Đối tượng authentication sẽ chứa thông tin xác thực sau khi quá trình xác
         // thực hoàn tất. //nếu xác thực không thành công thì 1 exception sẽ được ném ra
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

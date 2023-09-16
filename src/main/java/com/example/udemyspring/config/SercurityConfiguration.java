@@ -26,6 +26,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration // annotation này định nghĩa lớp cấu hình, định nghĩa 1 nguồn của các @Bean
 @EnableMethodSecurity // cho phép áp dụng phân quyền hasRole ở bên controller
+
+// @EnableWebSecurity //method này cho phép áp dụng phân quyền ở mức URL
+// VD:  http.authorizeRequests()
+// .antMatchers(HttpMethod.GET, "/public/**").permitAll() // Cho phép tất cả truy cập phương thức GET
+// .antMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN") // Yêu cầu vai trò ADMIN cho phương thức POST
+// .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER") // Yêu cầu vai trò USER cho phương thức POST
+// .anyRequest().authenticated() // Các request còn lại yêu cầu xác thực
+// .and()
+// .formLogin()
+// .and()
+// .logout().permitAll();
 public class SercurityConfiguration {
     private UserDetailsService userDetailsService;
 

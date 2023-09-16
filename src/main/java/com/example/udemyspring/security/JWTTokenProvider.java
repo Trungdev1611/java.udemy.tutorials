@@ -26,7 +26,7 @@ import io.jsonwebtoken.security.Keys;
            // bởi Spring IoC container.
 public class JWTTokenProvider {
 
-    @Value("app.jwt-secret") // truy cập biến trong application.property
+    @Value("${app.jwt-secret}") // truy cập biến trong application.property
     private String jwtSecret;
 
     @Value("${app-jwt-expiration-milliseconds}") // truy cập biến trong application.property
@@ -62,14 +62,16 @@ public class JWTTokenProvider {
         // .setExpiration(expireDate)
         // .signWith(key())
         // .compact();
-
+        System.out.println("222222222");
         return token;
     }
 
     // vì hàm signWith nhận 1 Key mã hóa, phải tiến hành mã hóa khóa bí mật trước
     // khi truyền vào signWith
     private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        System.out.println("abcded:::" + Decoders.BASE64.decode(jwtSecret));
+        return Keys.hmacShaKeyFor(
+                Decoders.BASE64.decode(jwtSecret));
     }
 
     // get Username from token //giống như giải mã token để lấy username
