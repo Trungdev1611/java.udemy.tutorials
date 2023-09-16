@@ -22,6 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.udemyspring.security.JWTAuthenticationEntryPoint;
 import com.example.udemyspring.security.JWTAuthenticationFilter;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration // annotation này định nghĩa lớp cấu hình, định nghĩa 1 nguồn của các @Bean
@@ -40,6 +43,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 // .formLogin()
 // .and()
 // .logout().permitAll();
+
+// start cấu hình openapi
+@SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
+// start cấu hình openapi
 public class SercurityConfiguration {
     private UserDetailsService userDetailsService;
 
@@ -77,8 +84,8 @@ public class SercurityConfiguration {
                         .requestMatchers("/api/auth/**").permitAll() // và bắt đầu với api in url và
                                                                      // method post với auth để login
                         .requestMatchers("/swagger-ui/**").permitAll() // cấu hình swagger public
-                        //http://localhost:8080/v3/api-docs  
-                        .requestMatchers("/v3/api-docs/**").permitAll()    
+                        // http://localhost:8080/v3/api-docs
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

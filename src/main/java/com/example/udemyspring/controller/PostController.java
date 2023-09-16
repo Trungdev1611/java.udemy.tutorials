@@ -6,6 +6,7 @@ import com.example.udemyspring.service.PostService;
 import com.example.udemyspring.service.impl.PostServiceImpl;
 import com.example.udemyspring.utils.AppConstant;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class PostController {
     // create blog Post
     @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PostMapping("/create_post")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
     public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
@@ -64,6 +68,9 @@ public class PostController {
     // update Post
     @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PutMapping("/{id}")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
     public ResponseEntity<PostDTO> updatePost(@PathVariable(name = "id") Long idUpdate, @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.updatePost(postDTO, idUpdate), HttpStatus.OK);
     }
@@ -71,6 +78,9 @@ public class PostController {
     // delete post
     @PreAuthorize("hasRole('AGENCY')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @DeleteMapping("/{id}")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
     public ResponseEntity<String> deletePost(@PathVariable Long id) {
         postService.deletepost(id);
         return new ResponseEntity<>("Delete post success", HttpStatus.OK);
