@@ -13,8 +13,15 @@ import com.example.udemyspring.DTO_payload.LoginDTO;
 import com.example.udemyspring.DTO_payload.RegisterDTO;
 import com.example.udemyspring.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/auth")
+
+@Tag(name = "REST API cho đăng nhập lấy token và đăng ký")
 public class AuthController {
     private AuthService authService;
 
@@ -31,6 +38,9 @@ public class AuthController {
     // HttpStatus.OK);
     // }
 
+    @Operation(summary = "Login", description = "login get token")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 Ok")
+
     @PostMapping({ "/login", "/signin" }) // có thể chọn 1 trong 2 url
     public ResponseEntity<JwtResponse> login(@RequestBody LoginDTO loginDTO) {
 
@@ -45,6 +55,9 @@ public class AuthController {
 
     // Build register restAPI
     @PostMapping({ "/register", "/signup" }) // có thể chọn 1 trong 2 url
+
+    @Operation(summary = "Register", description = "register account")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 Ok")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
         System.out.println("run register controller");
         return new ResponseEntity<String>(authService.register(registerDTO), HttpStatus.CREATED);

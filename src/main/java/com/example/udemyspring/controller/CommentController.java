@@ -10,8 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import com.example.udemyspring.DTO_payload.CommentDTO;
 import com.example.udemyspring.service.CommentSerrvice;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/posts")
+
+@Tag(name = "CRUD REST API for Comment Resource")
 public class CommentController {
     final private CommentSerrvice commentSerrvice;
 
@@ -22,6 +29,11 @@ public class CommentController {
 
     @PostMapping("/{postId}/comments")
     // http://localhost:8080/api/posts/idPost/comments
+
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "create comment RestAPI", description = "create comment and save into databasee")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 created")
+
     public ResponseEntity<CommentDTO> createComment(@PathVariable Long postId, @RequestBody CommentDTO comment) {
         return new ResponseEntity<>(commentSerrvice.createComment(postId, comment), HttpStatus.OK);
     }
@@ -50,6 +62,11 @@ public class CommentController {
     @PutMapping("{postId}/comments/{commentId}")
     // http://localhost:8080/api/posts/1/comments/1 (update comment theo comment id
     // và post id)
+
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "update comment RestAPI", description = "update comment and save into databasee")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 created")
+
     public ResponseEntity<CommentDTO> updateCommentByPostIdAndCommentId(@PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody CommentDTO commentDTO) {
@@ -60,6 +77,11 @@ public class CommentController {
     @DeleteMapping("{postId}/comments/{commentId}")
     // http://localhost:8080/api/posts/1/comments/2 (xóa comment thuộc post dựa trên
     // commentId và postId)
+
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "delete comment RestAPI", description = "delete comment and save into databasee")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 created")
+
     public ResponseEntity<String> deleteCommentByPostIdAndCommentId(@PathVariable Long postId,
             @PathVariable Long commentId) {
         commentSerrvice.deleteCommentByPostIdAndCommentId(postId, commentId);

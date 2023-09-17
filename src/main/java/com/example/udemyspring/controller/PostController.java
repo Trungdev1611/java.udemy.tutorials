@@ -6,6 +6,10 @@ import com.example.udemyspring.service.PostService;
 import com.example.udemyspring.service.impl.PostServiceImpl;
 import com.example.udemyspring.utils.AppConstant;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
+
+@Tag(name = "CRUD REST API for Post Resource")
 public class PostController {
     final private PostService postService;
 
@@ -34,6 +40,12 @@ public class PostController {
     // create blog Post
     @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PostMapping("/create_post")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "Create Post RestAPI", description = "create post rest api and save into database")
+    @ApiResponse(responseCode = "201", description = "HttpStatus 201 created")
+
     public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
@@ -64,6 +76,12 @@ public class PostController {
     // update Post
     @PreAuthorize("hasRole('ADMIN')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @PutMapping("/{id}")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "Update Post RestAPI", description = "update post rest api with idpost")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 created")
+
     public ResponseEntity<PostDTO> updatePost(@PathVariable(name = "id") Long idUpdate, @RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.updatePost(postDTO, idUpdate), HttpStatus.OK);
     }
@@ -71,6 +89,12 @@ public class PostController {
     // delete post
     @PreAuthorize("hasRole('AGENCY')") // chỉ định ADMIN mới có quyền thực hiện chức năng này
     @DeleteMapping("/{id}")
+
+    // chỉ định annotation để require token trên swagger
+    @SecurityRequirement(name = "Bearer Authentication") // name phải giống bên file cấu hình
+    @Operation(summary = "Delete Post RestAPI", description = "Delete post rest api with idpost")
+    @ApiResponse(responseCode = "200", description = "HttpStatus 200 created")
+
     public ResponseEntity<String> deletePost(@PathVariable Long id) {
         postService.deletepost(id);
         return new ResponseEntity<>("Delete post success", HttpStatus.OK);
